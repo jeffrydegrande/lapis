@@ -163,6 +163,7 @@ init_logger = function()
 end
 local init_db
 init_db = function()
+  local config = require("lapis.config").get()
   local default_backend = config.mysql and (config.mysql.backend or "resty_mysql")
   default_backend = default_backend or (config.postgres and config.postgres.backend)
   default_backend = default_backend or "default"

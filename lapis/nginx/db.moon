@@ -135,6 +135,7 @@ init_logger = ->
     logger = require "lapis.logging"
 
 init_db = ->
+  config = require("lapis.config").get!
   default_backend = config.mysql and (config.mysql.backend or "resty_mysql")
   default_backend = default_backend or (config.postgres and config.postgres.backend)
   default_backend = default_backend or "default"
