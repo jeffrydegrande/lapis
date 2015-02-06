@@ -5,7 +5,7 @@ do
   insert = _obj_0.insert
 end
 local config = require("lapis.config").get()
-local flatten_params_helper, flatten_params, query, request, migration, notice, migration_summary
+local flatten_params_helper, flatten_params, query, request, migration, notice, error, migration_summary
 flatten_params_helper = function(params, out, sep)
   if out == nil then
     out = { }
@@ -76,6 +76,9 @@ migration = function(name)
 end
 notice = function(msg)
   return print(colors("%{bright}%{yellow}Notice: %{reset}" .. tostring(msg)))
+end
+error = function(msg)
+  return print(colors("%{bright}%{read}Error: %{reset}" .. tostring(msg)))
 end
 migration_summary = function(count)
   local noun
