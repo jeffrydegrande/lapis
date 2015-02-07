@@ -10,6 +10,8 @@ A web framework for Lua/[MoonScript][1].
 
   * <http://rocks.moonscript.org>
   * <http://itch.io>
+  * <http://streak.club>
+  * <http://mundodescuento.com/>
 
 ## Running Tests
 
