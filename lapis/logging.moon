@@ -65,7 +65,7 @@ notice = (msg) ->
   print colors("%{bright}%{yellow}Notice: %{reset}#{msg}")
 
 error = (msg)->
-  print colors("%{bright}%{read}Error: %{reset}#{msg}")
+  print colors("%{bright}%{red}Error: %{reset}#{msg}")
 
 migration_summary = (count) ->
   noun = if count == 1

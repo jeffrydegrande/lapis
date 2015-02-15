@@ -78,7 +78,7 @@ notice = function(msg)
   return print(colors("%{bright}%{yellow}Notice: %{reset}" .. tostring(msg)))
 end
 error = function(msg)
-  return print(colors("%{bright}%{read}Error: %{reset}" .. tostring(msg)))
+  return print(colors("%{bright}%{red}Error: %{reset}" .. tostring(msg)))
 end
 migration_summary = function(count)
   local noun
