@@ -66,7 +66,6 @@ add_relations = (relations) =>
 
     if source = relation.has_one
       assert type(source) == "string", "Expecting model name for `has_one` relation"
-      column_name = "#{name}_id"
       @__base[fn_name] = =>
         existing = @[name]
         return existing if existing != nil
@@ -85,6 +84,7 @@ add_relations = (relations) =>
       column_name = "#{name}_id"
 
       @__base[fn_name] = =>
+        return nil unless @[column_name]
         existing = @[name]
         return existing if existing != nil
         model = assert_model source
@@ -374,7 +374,8 @@ class Model
   url_key: => concat [@[key] for key in *{@@primary_keys!}], "-"
 
   delete: =>
-    db.delete @@table_name!, @_primary_cond!
+    res =  db.delete @@table_name!, @_primary_cond!
+    res.affected_rows and res.affected_rows > 0, res
 
   -- thing\update "col1", "col2", "col3"
   -- thing\update {

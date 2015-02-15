@@ -113,7 +113,6 @@ add_relations = function(self, relations)
       local source = relation.has_one
       if source then
         assert(type(source) == "string", "Expecting model name for `has_one` relation")
-        local column_name = tostring(name) .. "_id"
         self.__base[fn_name] = function(self)
           local existing = self[name]
           if existing ~= nil then
@@ -137,6 +136,9 @@ add_relations = function(self, relations)
         assert(type(source) == "string", "Expecting model name for `belongs_to` relation")
         local column_name = tostring(name) .. "_id"
         self.__base[fn_name] = function(self)
+          if not (self[column_name]) then
+            return nil
+          end
           local existing = self[name]
           if existing ~= nil then
             return existing
@@ -211,7 +213,8 @@ do
       end)(), "-")
     end,
     delete = function(self)
-      return db.delete(self.__class:table_name(), self:_primary_cond())
+      local res = db.delete(self.__class:table_name(), self:_primary_cond())
+      return res.affected_rows and res.affected_rows > 0, res
     end,
     update = function(self, first, ...)
       local cond = self:_primary_cond()
