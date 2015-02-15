@@ -120,10 +120,10 @@ local backends = {
     end
   end,
   resty_mysql = function()
-    local after_dispatch
+    local after_dispatch, increment_perf
     do
       local _obj_0 = require("lapis.nginx.context")
-      after_dispatch = _obj_0.after_dispatch
+      after_dispatch, increment_perf = _obj_0.after_dispatch, _obj_0.increment_perf
     end
     local config = require("lapis.config").get()
     local mysql_config = assert(config.mysql, "missing postgres configuration")
@@ -134,6 +134,7 @@ local backends = {
         mysql = assert((require("resty.mysql")):new())
         mysql:set_timeout(mysql_config.read_timeout_ms or 1000)
         assert(mysql:connect(mysql_config))
+        assert(mysql:query("SET NAMES utf8"))
         if ngx then
           ngx.ctx.mysql = mysql
           after_dispatch(function()
@@ -141,10 +142,24 @@ local backends = {
           end)
         end
       end
-      if logger then
-        logger.query("[mysql] " .. tostring(str))
+      local start_time
+      if ngx and config.measure_performance then
+        ngx.update_time()
+        start_time = ngx.now()
       end
-      return assert(mysql:query(str))
+      if logger then
+        logger.query(str)
+      end
+      local res, err = mysql:query(str)
+      if start_time then
+        ngx.update_time()
+        increment_perf("db_time", ngx.now() - start_time)
+        increment_perf("db_count", 1)
+      end
+      if not res and err then
+        error(tostring(str) .. "\n" .. tostring(err))
+      end
+      return res
     end
   end
 }

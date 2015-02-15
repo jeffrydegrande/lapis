@@ -7,7 +7,10 @@ end
 local content
 content = function(name)
   local camelize
-  camelize = require("lapis.util").camelize
+  do
+    local _obj_0 = require("lapis.util")
+    camelize = _obj_0.camelize
+  end
   local class_name = camelize(name)
   return [[db = require "lapis.db"
 import Model from require "lapis.db.model"

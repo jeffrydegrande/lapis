@@ -105,7 +105,7 @@ backends = {
       res
 
   resty_mysql: ->
-    import after_dispatch from require "lapis.nginx.context"
+    import after_dispatch, increment_perf from require "lapis.nginx.context"
     config = require("lapis.config").get!
     mysql_config = assert config.mysql, "missing postgres configuration"
 
@@ -117,14 +117,29 @@ backends = {
         mysql\set_timeout mysql_config.read_timeout_ms or 1000
         assert mysql\connect mysql_config
 
+        assert mysql\query "SET NAMES utf8"
+
         if ngx
           ngx.ctx.mysql = mysql
           after_dispatch ->
             mysql\set_keepalive mysql_config.idle_timeout_ms or 10000,
                                 mysql_config.max_connections or   100
 
-      logger.query "[mysql] #{str}" if logger
-      assert mysql\query str
+      start_time = if ngx and config.measure_performance
+        ngx.update_time!
+        ngx.now!
+
+      logger.query str if logger
+      res, err =  mysql\query str
+
+      if start_time
+        ngx.update_time!
+        increment_perf "db_time", ngx.now! - start_time
+        increment_perf "db_count", 1
+
+      if not res and err
+        error "#{str}\n#{err}"
+      res
 }
 
 set_backend = (name="default", ...) ->

@@ -5,7 +5,10 @@ do
   insert, concat = _obj_0.insert, _obj_0.concat
 end
 local get_fields
-get_fields = require("lapis.util").get_fields
+do
+  local _obj_0 = require("lapis.util")
+  get_fields = _obj_0.get_fields
+end
 local query_parts = {
   "where",
   "group",

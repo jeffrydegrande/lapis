@@ -11,7 +11,10 @@ do
 end
 local cjson = require("cjson")
 local OffsetPaginator
-OffsetPaginator = require("lapis.db.pagination").OffsetPaginator
+do
+  local _obj_0 = require("lapis.db.pagination")
+  OffsetPaginator = _obj_0.OffsetPaginator
+end
 local singularize, Enum, enum, add_relations, Model
 singularize = function(name)
   return name:match("^(.*)s$") or name

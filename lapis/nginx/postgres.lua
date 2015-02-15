@@ -1,5 +1,8 @@
 local concat
-concat = table.concat
+do
+  local _obj_0 = table
+  concat = _obj_0.concat
+end
 local raw_query
 local proxy_location = "/query"
 local logger
@@ -58,7 +61,10 @@ local backends = {
       local pgmoon = ngx and ngx.ctx.pgmoon or pgmoon_conn
       if not (pgmoon) then
         local Postgres
-        Postgres = require("pgmoon").Postgres
+        do
+          local _obj_0 = require("pgmoon")
+          Postgres = _obj_0.Postgres
+        end
         pgmoon = Postgres(pg_config)
         assert(pgmoon:connect())
         if ngx then
@@ -278,7 +284,10 @@ do
     local strings = single_string + double_string
     local ci
     ci = function(str)
-      S = require("lpeg").S
+      do
+        local _obj_0 = require("lpeg")
+        S = _obj_0.S
+      end
       local p
       for c in str:gmatch(".") do
         local char = S(tostring(c:lower()) .. tostring(c:upper()))

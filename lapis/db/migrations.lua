@@ -68,7 +68,10 @@ end
 local run_migrations
 run_migrations = function(migrations)
   local entity_exists
-  entity_exists = require("lapis.db.schema").entity_exists
+  do
+    local _obj_0 = require("lapis.db.schema")
+    entity_exists = _obj_0.entity_exists
+  end
   if not (entity_exists(LapisMigrations:table_name())) then
     logger.notice("Table `" .. tostring(LapisMigrations:table_name()) .. "` does not exist, creating")
     create_migrations_table()

@@ -1,6 +1,9 @@
 local TEST_ENV = "test"
 local normalize_headers
-normalize_headers = require("lapis.spec.request").normalize_headers
+do
+  local _obj_0 = require("lapis.spec.request")
+  normalize_headers = _obj_0.normalize_headers
+end
 local ltn12 = require("ltn12")
 local json = require("cjson")
 local parse_query_string, encode_query_string
@@ -12,9 +15,15 @@ local current_server = nil
 local load_test_server
 load_test_server = function()
   local attach_server
-  attach_server = require("lapis.cmd.nginx").attach_server
+  do
+    local _obj_0 = require("lapis.cmd.nginx")
+    attach_server = _obj_0.attach_server
+  end
   local get_free_port
-  get_free_port = require("lapis.cmd.util").get_free_port
+  do
+    local _obj_0 = require("lapis.cmd.util")
+    get_free_port = _obj_0.get_free_port
+  end
   local app_port = get_free_port()
   current_server = attach_server(TEST_ENV, {
     port = app_port
@@ -25,7 +34,10 @@ end
 local close_test_server
 close_test_server = function()
   local detach_server
-  detach_server = require("lapis.cmd.nginx").detach_server
+  do
+    local _obj_0 = require("lapis.cmd.nginx")
+    detach_server = _obj_0.detach_server
+  end
   detach_server()
   current_server = nil
 end
